@@ -203,6 +203,27 @@
 }
 
 
+.modal-content p {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.8s forwards;
+}
+
+.modal-content p:nth-of-type(1) { animation-delay: 0.3s; }
+.modal-content p:nth-of-type(2) { animation-delay: 0.7s; }
+.modal-content p:nth-of-type(3) { animation-delay: 1.1s; }
+.modal-content p:nth-of-type(4) { animation-delay: 1.5s; }
+.modal-content p:nth-of-type(5) { animation-delay: 1.9s; }
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
 @keyframes popUp {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
@@ -228,48 +249,110 @@
   color: white;
   cursor: pointer;
 }
+
+.modal-content button {
+  position: relative;   /* override absolute */
+  display: inline-block;
+  margin: 8px 6px 0;
+}
+
+/* Gift Modal Style */
+.gift-content {
+  text-align: center;
+}
+
+.gift-image {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  animation: fadeZoom 0.6s ease;
+}
+
+.gift-caption {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+@keyframes fadeZoom {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.voucher-hint {
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+
+/* .modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 15px;
+} */
+
   </style>
 </head>
 
 <!-- Love Modal -->
 <div id="loveModal" class="modal">
-    <div class="modal-content">
-  
-      <h3>Haloo sayang ❤️</h3>
-  
-      <p>
-        Ini Valentine pertama aku selama ini, jadi jujur aku agak bingung mau kasih apa ke kamu. 
-        So I make this… sebenernya ini tuh bukan pure punya aku, aku cuma ngedit dan ubah sedikit-sedikit biar jadi versi aku
-      </p>
-  
-      <p>
-        Aku bikin ini karena aku pengen kamu tahu, meskipun sederhana dan mungkin nggak sempurna, 
-        aku bener-bener usaha buat bikin sesuatu yang beda untuk kamu.
-      </p>
-  
-      <p>
-        Aku berharap ke depannya kita bisa lebih dewasa dan semakin saling ngerti satu sama lain. 
-        Semoga kita bisa selalu ketawa bareng, cerita apa pun tanpa takut di-judge.
-      </p>
-  
-      <p>
-        So I just wanna say thank you sudah hadir di hidup aku. 
-      </p>
+  <div class="modal-content">
 
-      <p>
-        I’m really, really grateful to have you 💕
-      </p>
-  
-      <button id="closeModal">Close 💖</button>
-    </div>
+    <h3>Haloo sayang ❤️</h3>
+
+    <p>
+      Ini Valentine pertama aku selama ini, jadi jujur aku agak bingung mau kasih apa ke kamu.
+      So I make this… sebenernya ini tuh bukan pure punya aku, aku cuma ngedit sedikit biar jadi versi aku.
+    </p>
+
+    <p>
+      Aku bikin ini karena aku pengen kamu tahu, meskipun sederhana dan mungkin nggak sempurna,
+      aku bener-bener usaha buat bikin sesuatu yang beda untuk kamu.
+    </p>
+
+    <p>
+      Aku berharap ke depannya kita bisa lebih dewasa dan semakin saling ngerti satu sama lain.
+      Semoga kita bisa selalu ketawa bareng dan cerita apa pun tanpa takut di-judge.
+    </p>
+
+    <p>
+      I’m really, really grateful to have you 💕
+    </p>
+
+  <div class="modal-buttons">
+    <button id="openGift">🎁 Buka Hadiah</button>
+    <button id="closeModal">Close 💖</button>
   </div>
+
+  </div>
+</div>
+
+<div id="giftModal" class="modal">
+  <div class="modal-content gift-content">
+
+    <img src="image.png" alt="Our Moment" class="gift-image">
+
+    <p class="voucher-hint">
+      *Voucher ini bisa ditukar, hanya berlaku setelah 14 hari kamu buka website ini 💌
+    </p>
+
+    <button id="closeGift">Close 💕</button>
+
+  </div>
+</div>
   
 
 <body>
-
   <div class="card">
     <div class="emoji">🐱❤️</div>
-    <h2>Retno Anggraini ❤️,<br>will you be my Valentine?</h2>
+    <h2>Retno Anggraini❤️,<br>will you be my Valentine?</h2>
 
     <div class="buttons">
       <button id="yes">Yes 💖</button>
@@ -340,6 +423,39 @@
     }
 
     setInterval(createHeart, 380);
+
+    const openGift = document.getElementById("openGift");
+const giftModal = document.getElementById("giftModal");
+const closeGift = document.getElementById("closeGift");
+
+openGift.addEventListener("click", () => {
+  loveModal.classList.remove("show");
+
+  setTimeout(() => {
+    giftModal.classList.add("show");
+
+    confetti({
+      particleCount: 200,
+      spread: 100,
+      origin: { y: 0.6 }
+    });
+
+  }, 400);
+});
+
+closeGift.addEventListener("click", () => {
+  giftModal.classList.remove("show");
+});
+
+/* Close modal if click outside */
+[loveModal, giftModal].forEach(modal => {
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.remove("show");
+    }
+  });
+});
+
   </script>
 
 </body>
